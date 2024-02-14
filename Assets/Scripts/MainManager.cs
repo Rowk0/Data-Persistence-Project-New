@@ -1,11 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class MainManager : MonoBehaviour
 {
+    public Text puntaje;
+    private int maximoPuntaje;
+    
+
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
@@ -36,10 +43,15 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
+        puntaje.text = "Mejor Puntaje: " + dontDestroyOnLoad.instance.inputNombre + ": " + dontDestroyOnLoad.instance.maximoPuntaje;
+        
     }
 
     private void Update()
     {
+        maximoPuntaje = m_Points;
+
         if (!m_Started)
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -59,6 +71,15 @@ public class MainManager : MonoBehaviour
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
+        }
+
+        
+
+        if(maximoPuntaje > dontDestroyOnLoad.instance.maximoPuntaje)
+        {
+            dontDestroyOnLoad.instance.maximoPuntaje = maximoPuntaje;
+            dontDestroyOnLoad.instance.inputNombre = dontDestroyOnLoad.instance.inputNombreActual;
+            dontDestroyOnLoad.instance.SavePuntajeMayor();
         }
     }
 
